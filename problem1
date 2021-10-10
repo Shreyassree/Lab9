@@ -9,7 +9,7 @@ public:
     string name, addr;
     int age {0};
     long int account_number {0};
-    float balance {1000000}, withdraw {0}, dep {0};
+    long double balance = 1000000, withdraw {0}, dep {0};
 
     void open_account()
     {
