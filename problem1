@@ -1,0 +1,252 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+class Bank_Account      
+{
+public:
+    string name, addr;
+    int age {0};
+    long int account_number {0};
+    float balance {1000000}, withdraw {0}, dep {0};
+
+    void open_account()
+    {
+        cout << "Enter your Name: ";
+        cin >> name;
+        cout << "Enter your Address: ";
+        cin >> addr;
+        cout << "Enter Account Number: ";
+        cin >> account_number;
+        cout << "Enter your Age: ";
+        cin >> age;
+    }
+
+    void withdraw_money(float w)
+    {
+        withdraw = w;
+        if (withdraw > balance)
+        {
+            cout << "Insufficient Funds!" << endl;
+        }
+        else
+        {
+            balance = balance - withdraw;
+        }
+    }
+
+    void deposit(float d)
+    {
+        dep = d;
+        balance = balance + dep;
+
+        cout << "Deposit Succesful!"<<endl;
+        cout << "The new balance is: " << balance << endl;
+    }
+
+    void input_details()
+    {
+        cout << "Name:            " << name << endl;
+        cout << "Account Number:  " << account_number << endl;
+        cout << "Address:         " << addr << endl;
+        cout << "Age:             " << age << endl;
+        cout << "Balance:         " << balance << endl;
+    }
+
+};
+
+class Life_Insurance: virtual public Bank_Account   
+{
+public:
+    long int policy_number {0};
+    float Sum_Assured {0}, p1 {0}, prd {0}, prl {0};
+    int term {0};
+
+    void read()
+    {
+        cout << "Enter Life Insurance Policy Number: " << endl;
+        cin >> policy_number;
+        cout << "Enter Sum Assured: " << endl;
+        cin >> Sum_Assured;
+        cout << "Enter Term (years): " << endl;
+        cin >> term;
+    }
+
+    void car_policy()                     
+    {
+        if ( 25 > age)
+        {
+            p1 = 3000 * (Sum_Assured/100000);
+        }
+        else if (26 <= age <= 45 )
+        {
+            p1 = 4000 * (Sum_Assured/100000);
+        }
+        else if (46 <= age <= 60)
+        {
+            p1 = 5000 * (Sum_Assured/100000);
+        }
+        else
+        {
+            p1 = 0;
+        }
+        
+    }
+
+    void dis()                  
+    {
+        prd = p1 * term;
+        prl = prd - p1;
+        withdraw_money(p1);
+    }
+
+    void display()
+    {
+        input_details();
+        cout << "Insurance policy number is: " << policy_number << endl;
+        cout << "Term in years is: "<< term << endl;
+        cout << "Sum assuredis: " << Sum_Assured << endl;
+        cout << "The premium (for 1 year) is: "<< p1 << endl ;
+        cout << "The premium for the whole duration is: " << prd << endl;
+        cout << "The balance left after 1yr premium deduction is: " << balance << endl;
+        cout << "The premium remaining to be paid after the deduction is: " << prl << endl;
+
+    }
+
+};
+
+class Car_Insurance: virtual public Bank_Account 
+{
+public:
+    long int policy_no {0};
+    string car;
+    float premium {0}, prdur {0}, prmL {0};
+    int duration {0}, car_age {0};
+
+    void read_data()
+    {
+        cout << " Enter Car Insurance Policy Number: " << endl;
+        cin >> policy_no;
+
+        cout << "Enter Car Model: " << endl;
+        cin >> car;
+
+        cout << "Enter Insurance Years: " << endl;
+        cin >> duration;
+
+        cout << "Enter Age of Car: " << endl;
+        cin >> car_age;
+
+    }
+
+    void calc_premium()
+    {
+        if ( 2 > car_age)
+        {
+            premium = 5000 * 8 ;
+        }
+        else if (2 <= car_age <= 4)
+        {
+            premium = 3000 * 8; 
+        }
+        else if (5 <= car_age <= 7)
+        {
+            premium = 2000 * 8;
+        }        
+    }
+
+    void deduct_premium()
+    {
+        prdur = premium * duration ;
+        prmL = prdur - premium;
+        withdraw_money(premium);
+    }
+
+    void display_info()
+    {
+        input_details();
+        cout << "Car details are: " << car << ", " << car_age << "years" << endl;
+        cout << "Insurance Policy Number is: " << policy_no << endl;
+        cout << "Duration: "<< duration << endl;
+        cout << "The premium (for 1 year) is: "<< premium << endl ;
+        cout << "The premium for the whole duration is: " << prdur << endl;
+        cout << "The balance left after 1yr premium deduction is: " << balance << endl;
+        cout << "The premium remaining to be paid after the deduction is: " << prmL << endl;
+
+    }
+};
+
+class Claim: public Car_Insurance, public Life_Insurance   
+{
+public:
+    float amt {0}, car_amt {0};
+    void settlement_amt()     
+    {
+        int choice {0};
+        do
+        {
+            cout << "1. Life Insurance" << endl;
+            cout << "2. Car Insurance " << endl;
+            cout << "3. Close" << endl;
+            cout << "Please make a choice." << endl;
+            cin >> choice;
+
+            switch(choice)
+            {
+                case 1: if (term <5)
+                        {
+                            amt = 0;
+                        }
+                        else if ( 6 <= term <= 12)
+                        {
+                            amt = 0.25 * Sum_Assured;
+                        }
+                        else if (13 <= term <= 20)
+                        {
+                            amt = 0.50 * Sum_Assured + 0.20 * Sum_Assured;
+                        }
+                        else if(term > 20)
+                        {
+                            amt = Sum_Assured + 1.0 * Sum_Assured;
+                        }
+                        deposit(amt);
+                        break;
+                
+                case 2: cout << "Amount spent on repairing car: " << endl;
+                        cin >> car_amt;
+                        deposit (car_amt);
+                        break;
+                
+                case 3: cout << "Session ended! " << endl;
+                        break;
+                
+                default : cout << "Error" <<endl;
+            }
+        }while (choice !=3);
+    }
+
+    void disp()
+    {
+        input_details();
+        cout << "Settlement Amount for life insurance: "<< amt << endl; 
+        cout << "Settlement Amount for car insurance: "<< car_amt << endl; 
+    }
+};
+
+int main()
+{
+    Claim c;   // object of class created
+    c.open_account();
+    c.input_details();
+    c.read();
+    c.car_policy();
+    c.dis();
+    c.display();
+    c.read_data();
+    c.calc_premium();
+    c.deduct_premium();
+    c.display_info();
+    c.settlement_amt();
+    c.disp();         
+}
